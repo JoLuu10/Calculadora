@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora UI</title>
+</head>
+<body>
+    <div class="container">
+        <div class="iphone">
+            <div class="screen">
+                <div class="notch">
+                    <div class="sound"></div>
+                    <div class="Camera"></div>
+                </div>
+                <div class="time" id="time">
+                    <script>
+                        var time = document.getElementById('time').innerHTML;
+                        var today = new Date();
+                        var time = today.getHours() + ":" + today.getMinutes();
+                        time = document.write(time);
+                    </script>
+                </div>
+                <div class="battery">
+                    <i class="fa fa-battery-full"></i>
+                </div>
+                <div class="wifi">
+                    <i class="fa fa-wifi"></i>
+                </div>
+
+                <div class="top-nav"></div>
+
+                <form class="calculator container">
+                    <input type="text" placeholder="0" name="displayResult" class="area" />
+                    <div class="key container" id="keyBoard">  
+                        <div class="first-col"></div>
+
+                        <div class="second-col"></div>
+                            <div class="button">
+                                <button></button>
+                            </div>
+                        <div class="third-col"></div>
+
+                        <div class="fourth-col"></div>
+
+                        <div class="fifth-col"></div>
+
+
+                        <div class="menu"><i class ="bx bx-menu-alt-left"></i></div>
+                        <div class="home"><i class ="bx bx-home"></i></div>
+                        <div class="back"><i class ="bx bx-arrow-back"></i></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="dark-light">
+        <i class="bx bx-moon moon"></i>
+        <i class="bx bx-sun sun"></i>
+    </div>
+</body>
+</html>
