@@ -1,62 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora UI</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <div class="container">
-        <div class="iphone">
-            <div class="screen">
-                <div class="notch">
-                    <div class="sound"></div>
-                    <div class="Camera"></div>
-                </div>
-                <div class="time" id="time">
-                    <script>
-                        var time = document.getElementById('time').innerHTML;
-                        var today = new Date();
-                        var time = today.getHours() + ":" + today.getMinutes();
-                        time = document.write(time);
-                    </script>
-                </div>
-                <div class="battery">
-                    <i class="fa fa-battery-full"></i>
-                </div>
-                <div class="wifi">
-                    <i class="fa fa-wifi"></i>
-                </div>
+        <div class="calculator">
+            <div class="status-bar">
+                <div><span class="status-dot"></span> Calculadora</div>
+                <div id="clock">00:00</div>
+            </div>
+            <input id="display" class="display" type="text" placeholder="0" value="0" readonly />
 
-                <div class="top-nav"></div>
+            <div class="buttons">
+                <button class="button secondary" data-action="clear">C</button>
+                <button class="button secondary" data-action="sign">±</button>
+                <button class="button secondary" data-action="percent">%</button>
+                <button class="button operator" data-action="operator" data-value="/">÷</button>
 
-                <form class="calculator container">
-                    <input type="text" placeholder="0" name="displayResult" class="area" />
-                    <div class="key container" id="keyBoard">  
-                        <div class="first-col"></div>
+                <button class="button" data-action="digit" data-value="7">7</button>
+                <button class="button" data-action="digit" data-value="8">8</button>
+                <button class="button" data-action="digit" data-value="9">9</button>
+                <button class="button operator" data-action="operator" data-value="*">×</button>
 
-                        <div class="second-col"></div>
-                            <div class="button">
-                                <button></button>
-                            </div>
-                        <div class="third-col"></div>
+                <button class="button" data-action="digit" data-value="4">4</button>
+                <button class="button" data-action="digit" data-value="5">5</button>
+                <button class="button" data-action="digit" data-value="6">6</button>
+                <button class="button operator" data-action="operator" data-value="-">−</button>
 
-                        <div class="fourth-col"></div>
+                <button class="button" data-action="digit" data-value="1">1</button>
+                <button class="button" data-action="digit" data-value="2">2</button>
+                <button class="button" data-action="digit" data-value="3">3</button>
+                <button class="button operator" data-action="operator" data-value="+">+</button>
 
-                        <div class="fifth-col"></div>
-
-
-                        <div class="menu"><i class ="bx bx-menu-alt-left"></i></div>
-                        <div class="home"><i class ="bx bx-home"></i></div>
-                        <div class="back"><i class ="bx bx-arrow-back"></i></div>
-                    </div>
-                </form>
+                <button class="button wide" data-action="digit" data-value="0">0</button>
+                <button class="button" data-action="decimal">.</button>
+                <button class="button operator" data-action="calculate">=</button>
             </div>
         </div>
     </div>
-    <div class="dark-light">
-        <i class="bx bx-moon moon"></i>
-        <i class="bx bx-sun sun"></i>
-    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        const buttons = document.querySelectorAll('.button');
+        const clock = document.getElementById('clock');
+
+        let currentValue = '0';
+        let firstValue = null;
+        let operator = null;
+        let waitingForSecondValue = false;
+
+        function updateDisplay() {
+            display.value = currentValue;
+        }
+
+        function calculate(first, second, op) {
+            const a = parseFloat(first);
+            const b = parseFloat(second);
+            if (op === '+') return (a + b).toString();
+            if (op === '-') return (a - b).toString();
+            if (op === '*') return (a * b).toString();
+            if (op === '/') return b === 0 ? 'Error' : (a / b).toString();
+            return second;
+        }
+
+        function handleDigit(value) {
+            if (waitingForSecondValue) {
+                currentValue = value;
+                waitingForSecondValue = false;
+            } else {
+                currentValue = currentValue === '0' ? value : currentValue + value;
+            }
+        }
+
+        function handleDecimal() {
+            if (waitingForSecondValue) {
+                currentValue = '0.';
+                waitingForSecondValue = false;
+                return;
+            }
+            if (!currentValue.includes('.')) {
+                currentValue += '.';
+            }
+        }
+
+        function handleOperator(nextOperator) {
+            const inputValue = currentValue;
+            if (operator && waitingForSecondValue) {
+                operator = nextOperator;
+                return;
+            }
+            if (firstValue === null) {
+                firstValue = inputValue;
+            } else if (operator) {
+                const result = calculate(firstValue, inputValue, operator);
+                currentValue = result;
+                firstValue = result === 'Error' ? null : result;
+            }
+            waitingForSecondValue = true;
+            operator = nextOperator;
+        }
+
+        function handleCalculate() {
+            if (operator === null || waitingForSecondValue) return;
+            currentValue = calculate(firstValue, currentValue, operator);
+            operator = null;
+            firstValue = null;
+            waitingForSecondValue = false;
+        }
+
+        function handleClear() {
+            currentValue = '0';
+            firstValue = null;
+            operator = null;
+            waitingForSecondValue = false;
+        }
+
+        function handlePercent() {
+            currentValue = (parseFloat(currentValue) / 100).toString();
+        }
+
+        function handleSign() {
+            currentValue = (parseFloat(currentValue) * -1).toString();
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const action = button.dataset.action;
+                const value = button.dataset.value;
+                switch (action) {
+                    case 'digit':
+                        handleDigit(value);
+                        break;
+                    case 'decimal':
+                        handleDecimal();
+                        break;
+                    case 'operator':
+                        handleOperator(value);
+                        break;
+                    case 'calculate':
+                        handleCalculate();
+                        break;
+                    case 'clear':
+                        handleClear();
+                        break;
+                    case 'percent':
+                        handlePercent();
+                        break;
+                    case 'sign':
+                        handleSign();
+                        break;
+                }
+                updateDisplay();
+            });
+        });
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            clock.textContent = `${hours}:${minutes}`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 60_000);
+        updateDisplay();
+    </script>
 </body>
 </html>
