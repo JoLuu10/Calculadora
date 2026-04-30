@@ -3,6 +3,11 @@
 
 Una simple calculadora hecha con un HTML sencillo, un style.css para darle un diseño bonito y un .js para que haga las operaciones o borre.
 
+## Demo
+
+Puedes probar mi calculadora aqui 
+
+https://flourishing-alfajores-bb309a.netlify.app
 
 ## Paleta de Colores
 
