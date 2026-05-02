@@ -7,7 +7,7 @@ Una simple calculadora hecha con un HTML sencillo, un style.css para darle un di
 
 Puedes probar mi calculadora aqui 
 
-https://flourishing-alfajores-bb309a.netlify.app
+[https://flourishing-alfajores-bb309a.netlify.app](https://uicalculatorjs.netlify.app)
 
 ## Paleta de Colores
 
